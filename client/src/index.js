@@ -1,0 +1,15 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './Resources/css/styles.css';
+import Routes from './routes';
+
+import { BrowserRouter } from 'react-router-dom';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
