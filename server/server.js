@@ -47,7 +47,7 @@ app.get('/api/products/articles', (req, res) => {
     });
 });
 
-app.get('/api/product/articles_by_id', (req, res) => {
+app.get('/api/products/articles_by_id', (req, res) => {
   let type = req.query.type;
   let items = req.query.id;
 
@@ -67,7 +67,7 @@ app.get('/api/product/articles_by_id', (req, res) => {
     });
 });
 
-app.post('/api/product/article', auth, admin, (req, res) => {
+app.post('/api/products/article', auth, admin, (req, res) => {
   const product = new Product(req.body);
   product.save((err, doc) => {
     if (err) return res.json({ success: false, err });
@@ -82,7 +82,7 @@ app.post('/api/product/article', auth, admin, (req, res) => {
 //          BRAND
 //=================================
 
-app.post('/api/product/brand', auth, admin, (req, res) => {
+app.post('/api/products/brand', auth, admin, (req, res) => {
   const brand = new Brand(req.body);
   brand.save((err, doc) => {
     if (err) return res.json({ success: false, err });
@@ -93,7 +93,7 @@ app.post('/api/product/brand', auth, admin, (req, res) => {
   });
 });
 
-app.get('/api/product/brands', (req, res) => {
+app.get('/api/products/brands', (req, res) => {
   Brand.find({}, (err, brands) => {
     if (err) return res.status(400).send(err);
     res.status(200).send(brands);
@@ -104,7 +104,7 @@ app.get('/api/product/brands', (req, res) => {
 //          WOODS
 //=================================
 
-app.post('/api/product/wood', auth, admin, (req, res) => {
+app.post('/api/products/wood', auth, admin, (req, res) => {
   const wood = new Wood(req.body);
   wood.save((err, doc) => {
     if (err) return json({ success: false, err });
@@ -115,7 +115,7 @@ app.post('/api/product/wood', auth, admin, (req, res) => {
   });
 });
 
-app.get('/api/product/woods', (req, res) => {
+app.get('/api/products/woods', (req, res) => {
   Wood.find({}, (err, woods) => {
     if (err) return res.status(400).send(err);
     res.status(200).send(woods);
@@ -175,7 +175,7 @@ app.post('/api/users/login', (req, res) => {
   });
 });
 
-app.get('/api/user/logout', auth, (req, res) => {
+app.get('/api/users/logout', auth, (req, res) => {
   User.findOneAndUpdate({ _id: req.user._id }, { token: '' }, (err, doc) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
