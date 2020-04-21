@@ -3,10 +3,19 @@ import PageTop from '../utils/page_top';
 import { frets, price } from '../utils/Form/fixed_categories';
 
 import { connect } from 'react-redux';
-import { getBrands, getWoods } from '../../redux/actions/products_actions';
+import {
+  getProductsToShop,
+  getBrands,
+  getWoods
+} from '../../redux/actions/products_actions';
 
 import CollapseCheckbox from '../utils/collapseCheckbox';
 import CollapseRadio from '../utils/collapseRadio';
+import LoadmoreCards from './lodemoreCards';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faTh } from '@fortawesome/free-solid-svg-icons';
 
 class Shop extends Component {
   state = {
@@ -23,6 +32,10 @@ class Shop extends Component {
   componentDidMount() {
     this.props.dispatch(getBrands());
     this.props.dispatch(getWoods());
+
+    this.props.dispatch(
+      getProductsToShop(this.state.skip, this.state.limit, this.state.filters)
+    );
   }
 
   handlePrice = (value) => {
@@ -45,13 +58,47 @@ class Shop extends Component {
       newFilters[category] = priceValues;
     }
 
+    this.showFilteredResults(newFilters);
     this.setState({
       filters: newFilters
     });
   };
 
+  showFilteredResults = (filters) => {
+    this.props
+      .dispatch(getProductsToShop(0, this.state.limit, filters))
+      .then(() => {
+        this.setState({
+          skip: 0
+        });
+      });
+  };
+
+  loadMoreCards = () => {
+    let skip = this.state.skip + this.state.limit;
+    this.props
+      .dispatch(
+        getProductsToShop(
+          skip,
+          this.state.limit,
+          this.state.filters,
+          this.props.products.toShop
+        )
+      )
+      .then(() => {
+        this.setState({
+          skip
+        });
+      });
+  };
+
+  handleGrid = () => {
+    this.setState({
+      grid: !this.state.grid ? 'grid_bars' : ''
+    });
+  };
+
   render() {
-    console.log(this.state.filters);
     const products = this.props.products;
     return (
       <div>
@@ -90,7 +137,33 @@ class Shop extends Component {
                 }
               />
             </div>
-            <div className='right'>right</div>
+            <div className='right'>
+              <div className='shop_options'>
+                <div className='shop_girds clear'>
+                  <div
+                    className={`grid_btn ${this.state.grid ? '' : 'active'}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faTh} />
+                  </div>
+                  <div
+                    className={`grid_btn ${!this.state.grid ? '' : 'active'}`}
+                    onClick={() => this.handleGrid()}
+                  >
+                    <FontAwesomeIcon icon={faBars} />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <LoadmoreCards
+                  grid={this.state.grid}
+                  limit={this.state.limit}
+                  size={products.toShopSize}
+                  products={products.toShop}
+                  loadMore={() => this.loadMoreCards()}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
