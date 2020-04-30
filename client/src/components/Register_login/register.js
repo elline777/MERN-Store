@@ -95,24 +95,27 @@ class Register extends Component {
     let dataToSubmit = generateData(this.state.formdata, 'register');
     let formIsValid = isFormValid(this.state.formdata, 'register');
     if (formIsValid) {
-      this.props.dispatch(registerUser(dataToSubmit)).then((response) => {
-        if (response.payload.success) {
-          this.setState({
-            formError: false,
-            formSuccess: true
-          });
-          setTimeout(() => {
-            this.props.history.push('/register_login');
-          }, 3000);
-        } else {
+      this.props
+        .dispatch(registerUser(dataToSubmit))
+        .then((response) => {
+          if (response.payload.success) {
+            this.setState({
+              formError: false,
+              formSuccess: true
+            });
+            setTimeout(() => {
+              this.props.history.push('/register_login');
+            }, 3000);
+          } else {
+            this.setState({ formError: true });
+          }
+        })
+        .catch((e) => {
           this.setState({ formError: true });
-        }
-      });
+        });
     } else {
       this.setState({
         formError: true
-      }).catch((e) => {
-        this.setState({ formError: true });
       });
     }
   };
